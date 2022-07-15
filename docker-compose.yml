@@ -38,7 +38,8 @@ services:
     networks:
       rezet_tt_local:
         ipv4_address: 10.10.1.2
-
+    extra_hosts:
+      - host.docker.internal:host-gateway
 networks:
   rezet_tt_local:
     driver: bridge

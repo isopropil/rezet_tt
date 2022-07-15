@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('/signup', [\App\Http\Controllers\Auth::class, 'postSignup']);
+Route::post('/login', [\App\Http\Controllers\Auth::class, 'postLogin']);
+Route::get('/login/google', [\App\Http\Controllers\Auth::class, 'getGoogleLogin']);
+Route::get('/login/google/callback', [\App\Http\Controllers\Auth::class, 'getGoogleCallback']);
+
+Route::get('/logout', [\App\Http\Controllers\Auth::class, 'getLogout']);
+Route::get('/user-data', [\App\Http\Controllers\Auth::class, 'getUserData']);
+
+Route::get('/weather', [\App\Http\Controllers\Weather::class, 'getWeather'])
+    ->middleware('auth');

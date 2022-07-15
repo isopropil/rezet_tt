@@ -2,18 +2,22 @@
 
 namespace App\Providers;
 
+use App\Contracts\IWeatherService;
+use App\Services\OpenWeatherMapService;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
-{
+class AppServiceProvider extends ServiceProvider {
     /**
      * Register any application services.
      *
      * @return void
      */
-    public function register()
-    {
-        //
+    public function register() {
+        $this->app->bind(
+            IWeatherService::class,
+            OpenWeatherMapService::class
+        );
+
     }
 
     /**
@@ -21,8 +25,7 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
-    {
+    public function boot() {
         //
     }
 }
