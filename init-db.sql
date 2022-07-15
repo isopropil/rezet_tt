@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS rezet_tt;
+USE rezet_tt;

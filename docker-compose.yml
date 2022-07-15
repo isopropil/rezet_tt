@@ -1,0 +1,49 @@
+version: '3.9'
+
+services:
+  database:
+    image: mysql:8.0
+    env_file: ./.env.mysql
+    volumes:
+      - /var/lib/containers/rezet_tt/mysql:/var/lib/mysql:rw
+      - /var/log/containers/rezet_tt/mysql/:/var/log/mysql:rw
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-script.sql
+    networks:
+      rezet_tt_local:
+        ipv4_address: 10.10.1.3
+
+  redis:
+    image: redis:7.0-alpine
+    command: redis-server
+    networks:
+      rezet_tt_local:
+        ipv4_address: 10.10.1.4
+
+  app:
+    build:
+      context: ./
+      dockerfile: ./docker/app.dockerfile
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - database
+      - redis
+    ports:
+      - "0.0.0.0:8000:8000"
+    links:
+      - database
+      - redis
+    env_file: ./.env
+    networks:
+      rezet_tt_local:
+        ipv4_address: 10.10.1.2
+
+networks:
+  rezet_tt_local:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.1.0/24
+
