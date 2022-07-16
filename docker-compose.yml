@@ -24,8 +24,10 @@ services:
       context: ./
       dockerfile: ./docker/app.dockerfile
     working_dir: /var/www
-    volumes:
-      - ./:/var/www
+# Uncomment for development mode, after this - join to container and
+# run php ./composer.phar install && npm install && npm run watch
+#    volumes:
+#      - ./:/var/www
     depends_on:
       - database
       - redis
