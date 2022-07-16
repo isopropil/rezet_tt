@@ -17,3 +17,4 @@ Define environment variables:
 
 ``GOOGLE_CLIENT_REDIRECT``
 
+``OPENWEATHER_API_KEY`` - API key for Openweather API 

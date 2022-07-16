@@ -29,12 +29,28 @@ class Weather extends BaseController {
             'lng' => 'numeric',
         ]);
 
+        /**
+         * Possible to add GeoIP for request user's coordinates, if it not sent by user, but I don't know,
+         * is it needed for test task...
+         */
+        if (empty($data['lat']) || empty($data['lng'])) {
+            return \response()->json([
+                'status' =>'error',
+                'payload' => 'Data unavailable - coordinates not sent'
+            ]);
+        }
 
         $weather->getWeather($data['lat'], $data['lng']);
 
         return \response()->json([
             'status' =>'ok',
-            'payload' => []
+            'payload' => [
+                'temp' => $weather->getTemp(),
+                'pressure' => $weather->getPressure(),
+                'humidity' => $weather->getHumidity(),
+                'temp_min' => $weather->getTempMin(),
+                'temp_max' => $weather->getTempMax()
+            ]
         ]);
     }
 
