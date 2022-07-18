@@ -7,7 +7,7 @@ use App\Services\AbstractWeatherService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 
-class ServiceCase extends TestCase {
+class ServicesTest extends TestCase {
     use RefreshDatabase;
 
     /**
