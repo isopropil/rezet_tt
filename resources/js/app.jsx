@@ -42,12 +42,12 @@ class App extends React.Component {
      */
     updateUserData = () => {
         axios.get('/api/user-data')
-            .then(response => this.setState({ user: response.data }))
+            .then(response => this.setState({ user: response.data.payload }))
             .catch(() => message.error('Error retrieving user data'));
     }
 
     renderRoot() {
-        const { user } = this.state
+        const { user } = this.state;
         return (
             <>
                 {user && !user.authenticated &&

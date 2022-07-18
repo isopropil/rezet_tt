@@ -6,12 +6,14 @@ namespace App\Services;
 
 use App\Contracts\IWeatherService;
 use GuzzleHttp\Client;
+use Illuminate\Support\Arr;
 
 class OpenWeatherMapService extends AbstractWeatherService implements IWeatherService {
     protected function requestRawData($lat, $lng) {
         $client = new Client();
         $key = config('services.openweather.key');
-        $res = $client->get('https://api.openweathermap.org/data/2.5/weather', [
+        $url = config('services.openweather.url');
+        $res = $client->get($url, [
             'timeout' => 10,
             'query' => [
                 'lat' => $lat,
@@ -32,24 +34,28 @@ class OpenWeatherMapService extends AbstractWeatherService implements IWeatherSe
         return $body;
     }
 
+    private function fromRawData($path) {
+        return Arr::get($this->rawData, $path, null);
+    }
+
     public function getTemp() {
-        return $this->rawData ? (float)$this->rawData['main']['temp'] ?? null : null;
+        return (float)$this->fromRawData('main.temp');
     }
 
     public function getPressure() {
-        return $this->rawData ? (float)$this->rawData['main']['pressure'] ?? null : null;
+        return (float)$this->fromRawData('main.pressure');
     }
 
     public function getHumidity() {
-        return $this->rawData ? (float)$this->rawData['main']['humidity'] ?? null : null;
+        return (float)$this->fromRawData('main.humidity');
     }
 
     public function getTempMin() {
-        return $this->rawData ? (float)$this->rawData['main']['temp_min'] ?? nul : null;
+        return (float)$this->fromRawData('main.temp_min');
     }
 
     public function getTempMax() {
-        return $this->rawData ? (float)$this->rawData['main']['temp_max'] ?? null : null;
+        return (float)$this->fromRawData('main.temp_max');
     }
 
 

@@ -4,9 +4,11 @@ namespace Tests;
 
 use App\Models\User;
 use App\Services\AbstractWeatherService;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\Fluent\AssertableJson;
 
 class ServiceCase extends TestCase {
+    use RefreshDatabase;
 
     /**
      * Simple test snap to grid functionality
@@ -33,6 +35,66 @@ class ServiceCase extends TestCase {
 
         $this->assertNotEquals($fLat, $cLat);
         $this->assertNotEquals($fLng, $cLng);
+    }
+
+    public function testSignup() {
+        $fakeEmail = 'fake223@example.com';
+        $res = $this->postJson('api/signup', [
+            'email' => $fakeEmail,
+            'name' => 'Fake',
+            'password' => '12345678'
+        ]);
+        $this->assertEquals(200, $res->getStatusCode());
+        $json = $res->json();
+        $this->assertEquals('ok', $json['status']);
+
+        // Register with same email
+        $res = $this->postJson('api/signup', [
+            'email' => $fakeEmail,
+            'name' => 'Fake2',
+            'password' => '87654321'
+        ]);
+        $this->assertEquals(422, $res->getStatusCode());
+
+
+        // Register invalid email
+        $res = $this->postJson('api/signup', [
+            'email' => 'invalidEmail',
+            'name' => 'Fake2',
+            'password' => '87654321'
+        ]);
+        $this->assertEquals(422, $res->getStatusCode());
+    }
+
+    public function testLogin() {
+        $res = $this->postJson('api/signup', [
+            'email' => 'test@example.com',
+            'name' => 'Fake',
+            'password' => '87654321'
+        ]);
+
+
+        // Login with valid user
+        $res = $this->postJson('/api/login', [
+            'email' => 'test@example.com',
+            'password' => '87654321'
+        ]);
+        $this->assertEquals(200, $res->getStatusCode());
+        $res->assertJson(function (AssertableJson $json) {
+            return $json->where('status', 'ok')
+                ->etc();
+        });
+
+        // Log in with invalid user
+        $res = $this->postJson('/api/login', [
+            'email' => 'test@example.com',
+            'password' => '111'
+        ]);
+        $this->assertEquals(200, $res->getStatusCode());
+        $res->assertJson(function (AssertableJson $json) {
+            return $json->where('status', 'error')
+                ->etc();
+        });
     }
 
     /**

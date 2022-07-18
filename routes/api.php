@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Weather as WeatherController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,13 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/signup', [\App\Http\Controllers\Auth::class, 'postSignup']);
-Route::post('/login', [\App\Http\Controllers\Auth::class, 'postLogin']);
-Route::get('/login/google', [\App\Http\Controllers\Auth::class, 'getGoogleLogin']);
-Route::get('/login/google/callback', [\App\Http\Controllers\Auth::class, 'getGoogleCallback']);
+Route::post('/signup', [AuthController::class, 'postSignup']);
+Route::post('/login', [AuthController::class, 'postLogin']);
+Route::get('/login/google', [AuthController::class, 'getGoogleLogin']);
+Route::get('/login/google/callback', [AuthController::class, 'getGoogleCallback']);
 
-Route::get('/logout', [\App\Http\Controllers\Auth::class, 'getLogout']);
-Route::get('/user-data', [\App\Http\Controllers\Auth::class, 'getUserData']);
+Route::get('/logout', [AuthController::class, 'getLogout']);
+Route::get('/user-data', [AuthController::class, 'getUserData']);
 
-Route::get('/weather', [\App\Http\Controllers\Weather::class, 'getWeather'])
+Route::get('/weather', [WeatherController::class, 'getWeather'])
     ->middleware('auth');
